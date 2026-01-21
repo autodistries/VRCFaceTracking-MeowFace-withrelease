@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p release
           
-          zipPath="release/MeowFaceExtTrackingInterface.zip"
+          zipPath="$(pwd)/release/MeowFaceExtTrackingInterface.zip"
           dllPath="vrcfacetracking-meowface/MeowFaceExtTrackingInterface/bin/Release/net7.0/MeowFaceExtTrackingInterface.dll"
           metadataPath="vrcfacetracking-meowface/metadata.json"
           
@@ -52,7 +52,7 @@ jobs:
           
           # Create zip file
           cd "$tempDir"
-          zip -r "../../$zipPath" .
+          zip -r "$zipPath" .
           cd -
           rm -rf "$tempDir"
 
