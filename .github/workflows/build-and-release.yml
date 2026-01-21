@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: benaclejames/VRCFaceTracking
-          ref: 248e5ff32312d270afeb09b83e75124e2912d077
+          ref: 289d164441aa2e61eaff90d471af490a4717b03c
           path: VRCFaceTracking
 
       - name: Setup .NET
