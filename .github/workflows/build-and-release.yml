@@ -1,0 +1,71 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout MeowFace repo
+        uses: actions/checkout@v4
+        with:
+          path: vrcfacetracking-meowface
+
+      - name: Checkout VRCFaceTracking repo at specific commit
+        uses: actions/checkout@v4
+        with:
+          repository: benaclejames/VRCFaceTracking
+          ref: 248e5ff32312d270afeb09b83e75124e2912d077
+          path: VRCFaceTracking
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Restore dependencies
+        working-directory: vrcfacetracking-meowface
+        run: dotnet restore
+
+      - name: Build project
+        working-directory: vrcfacetracking-meowface
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Create release package
+        run: |
+          mkdir -p release
+          
+          zipPath="release/MeowFaceExtTrackingInterface.zip"
+          dllPath="vrcfacetracking-meowface/MeowFaceExtTrackingInterface/bin/Release/net7.0/MeowFaceExtTrackingInterface.dll"
+          metadataPath="vrcfacetracking-meowface/metadata.json"
+          
+          # Create temporary directory for zip contents
+          tempDir=$(mktemp -d)
+          cp "$dllPath" "$tempDir/MeowFaceExtTrackingInterface.dll"
+          cp "$metadataPath" "$tempDir/module.json"
+          
+          # Create zip file
+          cd "$tempDir"
+          zip -r "../../$zipPath" .
+          cd -
+          rm -rf "$tempDir"
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MeowFaceExtTrackingInterface
+          path: release/MeowFaceExtTrackingInterface.zip
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/MeowFaceExtTrackingInterface.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
