@@ -1,3 +1,6 @@
+# I don't take credit for nothing !
+This repo just builds the VRCFT module automatically. I didn't create it. I just wanted an up-to-date build (the last official one moved the wrong actions so yeah i did something)
+
 # MeowFace Tracking Module
 
 > Allows [VRCFaceTracking](https://docs.vrcft.io/docs/hardware/meowface) to take advantage of **MeowFace**'s tracking directly from your Android device.
